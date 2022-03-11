@@ -1,5 +1,5 @@
 import logging
-from run_cmd import run_command
+from cmd import run_command
 
 
 logger = logging.getLogger(__name__)
