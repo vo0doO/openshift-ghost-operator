@@ -9,7 +9,7 @@ from cmdl import run
 from get_token import get_token
 
 logger = logging.getLogger(__name__) 
-# g
+
 def get_time() -> str:
     return time.asctime().replace(" ", "_").replace(":", "-")
 
