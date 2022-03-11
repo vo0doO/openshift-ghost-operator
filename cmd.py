@@ -1,17 +1,13 @@
-from asyncio import subprocess
-import os
-import sys
-import time
 import logging
-import traceback
-from uuid import uuid5
-from msilib.schema import Error
 import subprocess
+import time
+import traceback
+from msilib.schema import Error
 
 logger = logging.getLogger(__name__)
 
 
-def run_command(command):
+def run(command):
     if not command:
         print()
         traceback.print_exc(100)
@@ -23,21 +19,17 @@ def run_command(command):
         logger.error("Error: ", exc.args)
         return exc
 
-def run_commands(cmds):
-    if not cmds:
+def runs(commands):
+    if not commands:
         raise Error("Нет списка комманд")
-    cmds.reverse()
+    commands.reverse()
     results = []
-    for cmd in cmds: # FIXME: Рекурсия !
+    for cmd in commands: # FIXME: Рекурсия !
         try:
-            result = run_command(cmd)
+            result = run(cmd)
             results.append(result)
             logger.info(f"Success {str()}")
             time.sleep(1)
             continue
         except Exception as exc:
             logger.error(f"Error on run {str(cmd)}", exc.args)
-
-
-if __name__ == "__main__":
-    run_run_command(sys.argv[1:])

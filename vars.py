@@ -19,7 +19,7 @@ GHOST_CONTENT_ITEMS_DIRS = [ "images", "themes", "logs", "settings", "data", "pu
 FILENAME_FOR_CREATE = str
 
 
-SYSTEM_COMMAND = {
+COMMANDS = {
     "backup_current_local_files": f"cp -r {LOCAL_GHOST_PATH} {LOCAL_GHOST_BACKUP_PATH}[{time}]",
 
 
