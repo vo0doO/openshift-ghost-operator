@@ -13,7 +13,6 @@ def run(command):
         traceback.print_exc(100)
     try:
         result = subprocess.getoutput(f"{command}")
-        logger.info(f"Success: {command}.")
         return result
     except Exception as exc:
         logger.error("Error: ", exc.args)
@@ -28,8 +27,7 @@ def runs(commands):
         try:
             result = run(cmd)
             results.append(result)
-            logger.info(f"Success {str()}")
             time.sleep(1)
             continue
         except Exception as exc:
-            logger.error(f"Error on run {str(cmd)}", exc.args)
+            logger.error(f"Error: ", exc.args)
