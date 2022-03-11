@@ -1,12 +1,7 @@
 import logging
-import os
-import sys
-import time
-
-
 from run_cmd import run_command
 
-time = time.asctime().replace(" ", "-")
+
 logger = logging.getLogger(__name__)
 
 
