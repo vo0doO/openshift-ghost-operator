@@ -4,7 +4,7 @@ import time
 import traceback
 from msilib.schema import Error
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("Sync my ghost openshift")
 
 
 def run(command):
@@ -18,12 +18,13 @@ def run(command):
         logger.error("Error: ", exc.args)
         return exc
 
+
 def runs(commands):
     if not commands:
         raise Error("Нет списка комманд")
     commands.reverse()
     results = []
-    for cmd in commands: # FIXME: Рекурсия !
+    for cmd in commands:  # FIXME: Рекурсия !
         try:
             result = run(cmd)
             results.append(result)
