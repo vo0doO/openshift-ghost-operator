@@ -1,8 +1,8 @@
 {
     "cSpell.words": [
-        "бэкапов",
-        "папка",
-        "указана",
-        "cmdl"
-    ]
+    ],
+    "cSpell.ignoreRegExpList": [
+        ".*"
+      ],
+      "python.formatting.provider": "black"
 }
