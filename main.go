@@ -2,49 +2,75 @@ package main
 
 import (
 	"fmt"
-	"log"
+	"os"
 
 	exec "golang.org/x/sys/execabs"
 )
 
-func Status() {
-	status := exec.Command(".\\oc.exe", "status")
-	out, err := status.CombinedOutput()
+var (
+	pd      int
+	logFile = "./logs.log"
+)
+
+func System(arg1 string, arg2 string) {
+	system := exec.Command(arg1, arg2)
+	out, err := system.CombinedOutput()
 	if err != nil {
-		log.Panicln("Error")
+		fmt.Println(err)
+		panic(err)
 	}
-	log.Printf("var: %#+v\n", out)
+	fmt.Printf("System out: %s\n", out)
 }
 
-func Pods() {
-	pods := exec.Command(".\\oc.exe", "get", "pods", "-l", "app=ghostis", "-o", "name")
-	pod, err := pods.CombinedOutput()
-	if err != nil {
-		log.Println(err)
-	}
-	log.Printf("var: %s", pod)
-}
+func Python(en bool, f *os.File, arg1 string, arg2 string, arg3 string, arg4 string, arg5 string) {
 
-func SyncContent() {
-
-	var pod_content_dir, local_content_dir string = ":/var/lib/content/data/db.sqlite3", "c:\\Users\\vo0\\.ghost\\ghost.db"
-	// "oc rsync {local_content_dir} {pod_name}:{pod_content_dir} --exclude=current --include=content.orig --no-perms",
-	sync := exec.Command(".\\oc.exe", "cp", "ghostis-1-xct67"+pod_content_dir, local_content_dir)
-	fmt.Println(sync)
-	out, err := sync.CombinedOutput()
-	if err != nil {
-		log.Panic(err)
+	if en != true {
+		python := exec.Command("python", arg1, arg2, arg3, arg4, arg5)
+		//
+		out, err := python.CombinedOutput()
+		if err != nil {
+			return
+		}
+		fmt.Printf("Python out: %s\n", out)
+		fmt.Fprintf(f, "Python out: %s\n", out)
+		pd = (*(*python).Process).Pid
 	}
-	log.Println(out)
+	python := exec.Command(".\\.venv\\Scripts\\python.exe", arg1, arg2, arg3, arg4, arg5)
+
+	out, err := python.CombinedOutput()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("Python out: %s\n", out)
+	fmt.Fprintf(f, "Python out: %s\n", out)
+	pd = (*(*python).Process).Pid
 }
 
 func main() {
-	sync := exec.Command(".\\oc.exe", "exec", "ghostis-1-xct67", "--", "ls", "-al")
-	out, err := sync.CombinedOutput()
+
+	fmt.Println("Run executable...")
+
+	file, err := os.OpenFile(logFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+
 	if err != nil {
-		log.Panic(err)
+		errStr := err.Error()
+		fmt.Printf("%v", errStr)
 	}
-	log.Println(out)
-	Status()
-	SyncContent()
+
+	if _, err := os.Stat(".venv"); os.IsNotExist(err) {
+		Python(false, file, "-m", "venv", ".venv", "", "")
+		fmt.Println("Creaded python virtual enviroment")
+		fmt.Fprintf(file, "Creaded python virtual enviroment\n")
+		System(".\\.venv\\Scripts\\activate", "")
+		Python(true, file, "-m", "pip", "install", "--upgrade", "pip")
+		Python(true, file, "-m", "pip", "install", "-r", "requirements.txt")
+	}
+	fmt.Println("Python virtual enviroment exists")
+	fmt.Fprintf(file, "Python virtual enviroment exists\n")
+	System(".\\.venv\\Scripts\\activate", "")
+	Python(true, file, "--version", "", "", "", "")
+	Python(true, file, "-m", "pip", "--version", "", "")
+	fmt.Printf("Python run main.py in pid: %v\n", pd)
+	fmt.Fprintf(file, "Python run main.py in pid: %v\n", pd)
+	Python(true, file, "src\\main.py", "", "", "", "")
 }
