@@ -122,3 +122,7 @@ def ls(folder_id: str, DRIVE) -> list[str]:
 
     except Exception as e:
         logger.error("Error on clean gdrive files", e.args)
+# ls("1iRH-NKzG3eUFQ1qXwVo2wt4ynEobRlCP", get_service())
+DRIVE=get_service()
+upload_file_in_google_drive(LOCAL_GHOST_GOGLE_DRIVE_PATH, DRIVE)
+clear_files_in_google_drive(DRIVE)
