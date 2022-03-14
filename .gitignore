@@ -109,7 +109,7 @@ env/
 ENV/
 env.bak/
 venv.bak/
-
+misc/sog*
 # Spyder project settings
 .spyderproject
 .spyproject
