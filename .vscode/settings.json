@@ -4,5 +4,6 @@
     "cSpell.ignoreRegExpList": [
         ".*"
       ],
-      "python.formatting.provider": "autopep8"
+      "python.formatting.provider": "autopep8",
+      "json.format.enable": true,
 }
