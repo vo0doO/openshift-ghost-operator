@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Endpoints
+metadata:
+  labels:
+    app: ghostis
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+  name: {{ template "fullname" . }}
+subsets:
+  - addresses:
+      - ip: 10.128.4.45
+        nodeName: ip-172-31-52-117.eu-west-1.compute.internal
+        targetRef:
+          kind: Pod
+          name: ghostis-2-hgbpp
+          namespace: sso
+          resourceVersion: '1402361081'
+          uid: 5e64aabd-9fa8-11ec-b011-0645a759894e
+    ports:
+      - name: 2368-tcp
+        port: 2368
+        protocol: TCP

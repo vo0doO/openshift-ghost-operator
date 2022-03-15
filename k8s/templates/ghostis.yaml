@@ -1,0 +1,88 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    kubernetes.io/limit-ranger: >-
+      LimitRanger plugin set: cpu, memory request for container ghostis; cpu,
+      memory limit for container ghostis
+    openshift.io/deployment-config.latest-version: '2'
+    openshift.io/deployment-config.name: ghostis
+    openshift.io/deployment.name: ghostis-2
+    openshift.io/generated-by: OpenShiftWebConsole
+    openshift.io/scc: restricted
+  labels:
+    app: ghostis
+    deployment: ghostis-2
+    deploymentconfig: ghostis
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+  name: {{ template "fullname" . }}
+  ownerReferences:
+    - apiVersion: v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicationController
+      name: ghostis-2
+      uid: b52a65e3-9f48-11ec-b011-0645a759894e
+spec:
+  containers:
+    - env:
+        - name: url
+          value: 'http://blog.vo.dedyn.io'
+      image: >-
+        docker.io/ibanks/ghostis@sha256:58b36c9bee7c22c7d85a9687cbb5aabec6c61c00dccca1cccc2c7f02b5ff4480
+      imagePullPolicy: Always
+      name: ghostis
+      ports:
+        - containerPort: 2368
+          protocol: TCP
+      resources:
+        limits:
+          cpu: '1'
+          memory: 512Mi
+        requests:
+          cpu: 30m
+          memory: 409Mi
+      securityContext:
+        capabilities:
+          drop:
+            - KILL
+            - MKNOD
+            - NET_RAW
+            - SETGID
+            - SETUID
+        runAsUser: 1537930000
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+        - mountPath: /var/lib/ghost/content
+          name: ghostis-1
+        - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+          name: default-token-dw5v7
+          readOnly: true
+  dnsPolicy: ClusterFirst
+  imagePullSecrets:
+    - name: default-dockercfg-tc29j
+  nodeName: ip-172-31-52-117.eu-west-1.compute.internal
+  nodeSelector:
+    type: compute
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext:
+    fsGroup: 1537930000
+    seLinuxOptions:
+      level: 's0:c733,c687'
+  serviceAccount: default
+  serviceAccountName: default
+  terminationGracePeriodSeconds: 30
+  tolerations:
+    - effect: NoSchedule
+      key: node.kubernetes.io/memory-pressure
+      operator: Exists
+  volumes:
+    - emptyDir: {}
+      name: ghostis-1
+    - name: default-token-dw5v7
+      secret:
+        defaultMode: 420
+        secretName: default-token-dw5v7
