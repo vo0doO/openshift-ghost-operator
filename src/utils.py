@@ -1,3 +1,6 @@
+#!.\.venv\Scripts\ python
+# -*- coding: utf-8 -*-
+
 import os
 import sys
 import cmdl
@@ -6,12 +9,10 @@ import shutil
 import base64
 import hashlib
 import logging
+from site import venv
 from functools import reduce
 from get_token import get_token
 from argparse import ArgumentError
-
-logger = logging.getLogger("Sync my ghost openshift")
-
 
 APP_NAME = "ghostis"
 BLOG_URL = "https://blog.vo.dedyn.io"
@@ -48,11 +49,14 @@ COMMANDS = {
 }
 
 
+logger = logging.getLogger("Sync my ghost openshift")
+
+
 def get_time() -> str:
     try:
         return time.asctime().replace(" ", "_").replace(":", "-")
     except Exception as e:
-        logger.error("Error on clean logs", e.with_traceback)
+        logger.info("Error on clean logs", e.with_traceback)
 
 
 def hash_files(files, verbose=False):
@@ -75,9 +79,8 @@ def hash_files(files, verbose=False):
 
 
 def set_logger():
-    global logger
     logging.basicConfig(
-        filename="..\logs.log",
+        filename="logs.log",
         filemode="a",
         format="%(asctime)s:%(levelname)s:%(message)s",
         level=logging.INFO,
@@ -100,8 +103,9 @@ def clear_logs(file_name) -> None:
         with open("logs.log", "w") as logs:
             for line in lines[len(lines) - 200: -1]:
                 logs.write(line)
+        logger.info("Clean logs success")
     except Exception as e:
-        logger.error("Error on clean logs", e.with_traceback)
+        logger.info(f"Error on clean logs: {e.with_traceback}")
 
 
 def clear_backups(folder: str) -> None:
@@ -115,8 +119,9 @@ def clear_backups(folder: str) -> None:
 
         for dir in backups_dirs[0: len(backups_dirs) - 3]:
             shutil.rmtree(f"{folder}\\{dir}", ignore_errors=True)
+        logger.info("Clean local backup success")
     except Exception as e:
-        logger.error("Error on clean logs", e.with_traceback)
+        logger.info(f"Error on clean logs, {e.with_traceback}")
 
 
 def backup_local_files() -> None:
@@ -130,9 +135,9 @@ def backup_local_files() -> None:
             ignore_dangling_symlinks=False,
             dirs_exist_ok=False,
         )
-        return
+        logger.info("Local files {} backup success")
     except Exception as e:
-        logger.error("Error on clean logs", e.with_traceback)
+        logger.info(f"Error on clean logs, {e.with_traceback}")
 
 
 def clear_local_archives_folder(folder) -> None:
@@ -146,7 +151,7 @@ def clear_local_archives_folder(folder) -> None:
                 if ".zip" in file:
                     os.remove(f"{folder}\\{file}")
     except Exception as e:
-        logger.error("Error on make archive", e.with_traceback)
+        logger.info(f"Error on make archive, {e.with_traceback}")
 
 
 def make_archive_for_google_drive(folder):
@@ -156,7 +161,7 @@ def make_archive_for_google_drive(folder):
                 f"{folder}\\{dir}", "zip", f"{LOCAL_GHOST_BACKUP_PATH}\\{dir}"
             )
     except Exception as e:
-        logger.error("Error on make archive", e.with_traceback)
+        logger.info(f"Error on make archive, {e.with_traceback}")
 
 
 def sanitize_folders_in_pod_str(folders_in_pod) -> str:
@@ -174,7 +179,7 @@ def download_current_content_from_pod_to_local(pod_name: str, project_name: str,
             time.sleep(3)
             logger.info(f"Copy {dir} from pod to local success")
         except Exception as e:
-            logger.error(f"Error on download files from pod: {e.args}")
+            logger.info(f"Error on download files from pod: {e.args}")
             continue
     for file in files_list:
         try:
@@ -182,5 +187,5 @@ def download_current_content_from_pod_to_local(pod_name: str, project_name: str,
             time.sleep(3)
             logger.info(f"Copy {file} from pod to local success")
         except Exception as e:
-            logger.error(f"Error on download files from pod: {e.args}")
+            logger.info(f"Error on download files from pod: {e.args}")
             continue
