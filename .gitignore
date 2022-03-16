@@ -2,10 +2,11 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+bin/*-*
 # C extensions
 *.so
-
+*secret*
+*storage**
 # Distribution / packaging
 .Python
 build/
@@ -109,7 +110,7 @@ env/
 ENV/
 env.bak/
 venv.bak/
-
+misc/sog*
 # Spyder project settings
 .spyderproject
 .spyproject
