@@ -1,5 +1,6 @@
 from __future__ import print_function
 import logging
+from multiprocessing import parent_process
 
 import os
 from os import error as e
@@ -51,6 +52,29 @@ def get_service():
     return DRIVE
 
 
+def get_files_id_for_delete(file_ids: list) -> list:
+    if not file_ids:
+        l.info("Not files for delete")
+    ids_for_delete = []
+    try:
+        if len(file_ids) < 5:
+            l.info("Google drive do not need clean")
+            return
+        for id in file_ids[0:len(file_ids)-3]:
+            ids_for_delete.append(id)
+        return ids_for_delete
+    except Exception as e:
+        l.info(f"Error on search files for delete of dgrive: {e.args}")
+
+
+def get_file_name(drive, id: str) -> str:
+    return drive.files().get(fileId=id).execute().get('name')
+
+
+def delete_file(drive, id: str) -> None:
+    return drive.files().delete(fileId=id).execute()
+
+
 def clear_files_in_google_drive(DRIVE):
     """Deleted must more
     files on what you want
@@ -65,17 +89,10 @@ def clear_files_in_google_drive(DRIVE):
         gdrive_backups_folder_id = "1iRH-NKzG3eUFQ1qXwVo2wt4ynEobRlCP"
         files = ls(gdrive_backups_folder_id, DRIVE)
         file_ids = files["ids"]
-        try:
-            if len(file_ids) < 5:
-                l.info("Google drive do not need clean")
-                return
-            for id in file_ids[0:len(file_ids)-3]:
-                l.info(
-                    f"Deleted deprecated file in google drive: {DRIVE.files().get(fileId=id).execute().get('name')}")
-                DRIVE.files().delete(fileId=id).execute()
-            return
-        except Exception as e:
-            l.info(f"Error on clean gdrive files: {e.args}")
+        file_ids_for_delete = get_files_id_for_delete(file_ids)
+        for id in file_ids_for_delete:
+            l.info(f"Deprecated file {get_file_name(DRIVE, id)} remove of goodle drive")
+            delete_file(DRIVE, id)
     except Exception as e:
         l.info("Error in clean_files_in_google_drive: {e}")
 
@@ -144,8 +161,8 @@ def ls(folder_id: str, DRIVE) -> list[str]:
         response = DRIVE.files().list(
             q="mimeType='application/x-zip-compressed'",
             spaces='drive',
-            fields='files(name, id, parents)',
-            orderBy='name'
+            fields='*',
+            orderBy='createdTime'
         ).execute()
         files = response.get('files', [])
 

@@ -14,8 +14,10 @@ from functools import reduce
 from get_token import get_token
 from argparse import ArgumentError
 
+
+PROJECT_NAME = "sso"
 APP_NAME = "ghostis"
-BLOG_URL = "https://blog.vo.dedyn.io"
+BLOG_URL = "https://blog.vo.dedyn.io/"
 FILENAME_FOR_CREATE = str
 GHOST_CONTENT_ITEMS_DIRS = ["images", "themes",
                             "logs", "settings", "data", "public"]
@@ -29,23 +31,23 @@ LOCAL_GHOST_PATH_FOR_BACKUP = "c:\\home\\vo0\\ghost\\current"
 LOGS_FILE_NAME = "logs.log"
 POD_GHOST_CONTENT_PATH = "/var/lib/ghost/content"
 POD_GHOST_PATH = "/var/lib/ghost"
-POD_NAME = cmdl.run(f"oc get pods -l app={APP_NAME} -o name").replace("pod/", "")
-PROJECT_NAME = "sso"
+POD_NAME = cmdl.run(f"src\oc.exe get pods -l app={APP_NAME} -o name").replace("pod/", "")
+
 TOKEN_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "token")
 COMMANDS = {
     "backup_current_local_files": 'shutil.copytree(f"{LOCAL_GHOST_PATH_FOR_BACKUP}", f"{LOCAL_GHOST_BACKUP_PATH}\\ghost[{my_time}]", symlinks=False, ignore=None, copy_function=shutil.copy2, ignore_dangling_symlinks=False, dirs_exist_ok=False)',
-    "login_to_cluster": f"oc login https://api.pro-eu-west-1.openshift.com --token={get_token(token_path=TOKEN_PATH, password='p')}",
-    "set_project": f"oc project {PROJECT_NAME}",
-    "get_pod_name": f"oc get pods -l app={APP_NAME} -o name",
-    "copy_all_ghost_content_dirs_from_local_to_pod": f"oc cp {LOCAL_GHOST_CONTENT_PATH} {PROJECT_NAME}/{POD_NAME}:{POD_GHOST_PATH}",
-    "copy_once_ghost_content_dir_from_local_to_pod": f"oc cp {LOCAL_GHOST_CONTENT_PATH}/{GHOST_CONTENT_ITEMS_DIRS[0]} {PROJECT_NAME}/{POD_NAME}:{POD_GHOST_CONTENT_PATH}",
-    "copy_all_ghost_dirs_from_pod_to_local": f"oc cp {PROJECT_NAME}/{POD_NAME}:{POD_GHOST_PATH} {LOCAL_GHOST_PATH}",
-    "copy_all_ghost_content_dirs_from_pod_to_local": f"oc cp {PROJECT_NAME}/{POD_NAME}:{POD_GHOST_CONTENT_PATH} {LOCAL_GHOST_PATH}",
-    "copy_once_ghost_content_dir_from_local_to_pod": f"oc cp {PROJECT_NAME}/{POD_NAME}:{POD_GHOST_CONTENT_PATH}/{GHOST_CONTENT_ITEMS_DIRS[0]} {LOCAL_GHOST_CONTENT_PATH}/{GHOST_CONTENT_ITEMS_DIRS[0]} ",
-    "create_empty_dir_in_pod": f"oc exec {POD_NAME} mkdir content/{GHOST_CONTENT_ITEMS_DIRS[0]}",
-    "create_empty_file_in_pod": f"oc exec {POD_NAME} touch content/{FILENAME_FOR_CREATE}",
-    "get_folders_in_pod": f"oc exec {POD_NAME} -- ls content/",
-    "run_ghost": f"oc exec {POD_NAME} -- node current/index.js --url={BLOG_URL}",
+    "login_to_cluster": f"src\oc.exe login https://api.pro-eu-west-1.openshift.com --token={get_token(token_path=TOKEN_PATH, password='p')}",
+    "set_project": f"src\oc.exe project {PROJECT_NAME}",
+    "get_pod_name": f"src\oc.exe get pods -l app={APP_NAME} -o name",
+    "copy_all_ghost_content_dirs_from_local_to_pod": f"src\oc.exe cp {LOCAL_GHOST_CONTENT_PATH} {PROJECT_NAME}/{POD_NAME}:{POD_GHOST_PATH}",
+    "copy_once_ghost_content_dir_from_local_to_pod": f"src\oc.exe cp {LOCAL_GHOST_CONTENT_PATH}/{GHOST_CONTENT_ITEMS_DIRS[0]} {PROJECT_NAME}/{POD_NAME}:{POD_GHOST_CONTENT_PATH}",
+    "copy_all_ghost_dirs_from_pod_to_local": f"src\oc.exe cp {PROJECT_NAME}/{POD_NAME}:{POD_GHOST_PATH} {LOCAL_GHOST_PATH}",
+    "copy_all_ghost_content_dirs_from_pod_to_local": f"src\oc.exe cp {PROJECT_NAME}/{POD_NAME}:{POD_GHOST_CONTENT_PATH} {LOCAL_GHOST_PATH}",
+    "copy_once_ghost_content_dir_from_local_to_pod": f"src\oc.exe cp {PROJECT_NAME}/{POD_NAME}:{POD_GHOST_CONTENT_PATH}/{GHOST_CONTENT_ITEMS_DIRS[0]} {LOCAL_GHOST_CONTENT_PATH}/{GHOST_CONTENT_ITEMS_DIRS[0]} ",
+    "create_empty_dir_in_pod": f"src\oc.exe exec {POD_NAME} mkdir content/{GHOST_CONTENT_ITEMS_DIRS[0]}",
+    "create_empty_file_in_pod": f"src\oc.exe exec {POD_NAME} touch content/{FILENAME_FOR_CREATE}",
+    "get_folders_in_pod": f"src\oc.exe exec {POD_NAME} -- ls content/",
+    "run_ghost": f"src\oc.exe exec {POD_NAME} -- node current/index.js --url={BLOG_URL}",
 }
 
 
@@ -175,7 +177,7 @@ def sanitize_folders_in_pod_str(folders_in_pod) -> str:
 def download_current_content_from_pod_to_local(pod_name: str, project_name: str, src_path: str, dst_path: str, folders_list: list[str], files_list: list[str]) -> None:
     for dir in folders_list:
         try:
-            cmdl.run(f"oc cp {project_name}/{pod_name}:{src_path}/{dir}/ {dst_path}/{dir}")
+            cmdl.run(f"src\oc.exe cp {project_name}/{pod_name}:{src_path}/{dir}/ {dst_path}/{dir}")
             time.sleep(3)
             logger.info(f"Copy {dir} from pod to local success")
         except Exception as e:
@@ -183,7 +185,7 @@ def download_current_content_from_pod_to_local(pod_name: str, project_name: str,
             continue
     for file in files_list:
         try:
-            cmdl.run(f"oc cp {project_name}/{pod_name}:{src_path}/{file} {dst_path}/{file}")
+            cmdl.run(f"src\oc.exe cp {project_name}/{pod_name}:{src_path}/{file} {dst_path}/{file}")
             time.sleep(3)
             logger.info(f"Copy {file} from pod to local success")
         except Exception as e:
