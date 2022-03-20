@@ -1,7 +1,3 @@
-#!.\.venv\Scripts\ python
-# -*- coding: cp1252 -*-
-
-
 import logging
 import sys
 
