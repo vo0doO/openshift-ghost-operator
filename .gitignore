@@ -7,6 +7,7 @@ bin/*-*
 *.so
 *secret*
 *storage**
+**client_id**
 # Distribution / packaging
 .Python
 build/
@@ -27,6 +28,7 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+storage.json
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

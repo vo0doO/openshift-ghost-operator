@@ -1,5 +1,5 @@
-module sync-openshift-ghost
+module openshift-ghost-operator
 
 go 1.17
 
-require golang.org/x/sys v0.0.0-20220310020820-b874c991c1a5
+require golang.org/x/sys v0.0.0-20220318055525-2edf467146b5

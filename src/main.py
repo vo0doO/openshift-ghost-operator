@@ -1,8 +1,9 @@
-import sys
 import logging
-from utils import *
-from gdrive import *
+import sys
+
 from cmdl import run
+from gdrive import *
+from utils import *
 
 
 def main():
@@ -14,7 +15,7 @@ def main():
         logger.info(f"Set project with name: {PROJECT_NAME}")
         POD_NAME = run(COMMANDS["get_pod_name"]).replace("pod/", "")
         logger.info(f"Set pod with name: {POD_NAME}")
-        folders_in_pod = run(f"oc exec {POD_NAME} -- ls content/")
+        folders_in_pod = run(f"src\oc.exe exec {POD_NAME} -- ls content/")
         logger.info(f"Pod have {sanitize_folders_in_pod_str(folders_in_pod)} in content")
         if folders_in_pod != "":
             logger.info(
@@ -31,8 +32,8 @@ def main():
             logger.info("Created archive from current ghost files success")
             logger.info("Uploading backups in cloud")
             drive = get_service()
-            clear_files_in_google_drive(drive)
             upload_file_in_google_drive(LOCAL_GHOST_GOGLE_DRIVE_PATH, drive)
+            clear_files_in_google_drive(drive)
             logger.info("Cleaning ghost archive files in google drive")
             logger.info("[+]"*20)
             return
