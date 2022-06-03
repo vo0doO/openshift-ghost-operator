@@ -1,1 +1,24 @@
-{"access_token": "ya29.A0ARrdaM9PTQF6BcUcqW7WrBIJQpJfJmSMJqObl-rT0X40e2jNxw0xTJBeIMHXhs4hz7zugINk8qummGp1vD-ZCkkHpfw_1kcsn1nKopNTBaXxYhJ34A-LDNsNlCqazOph9JRd7qzdos5rxQplCZBnaSHaGGbmKw", "client_id": "483698182110-glqvuttevvtm2o561j6ft6vih5ni8bfj.apps.googleusercontent.com", "client_secret": "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", "refresh_token": "1//0cjdxMYJ7IgT9CgYIARAAGAwSNwF-L9IrQyIwE6KKNfiy2Jdlj3nV8I4nmGHDQk-XlkAo07IDsnV5MYTgNkOZ-xWHcbp467M1y3Y", "token_expiry": "2022-03-20T02:04:13Z", "token_uri": "https://oauth2.googleapis.com/token", "user_agent": null, "revoke_uri": "https://oauth2.googleapis.com/revoke", "id_token": null, "token_response": {"access_token": "ya29.A0ARrdaM9PTQF6BcUcqW7WrBIJQpJfJmSMJqObl-rT0X40e2jNxw0xTJBeIMHXhs4hz7zugINk8qummGp1vD-ZCkkHpfw_1kcsn1nKopNTBaXxYhJ34A-LDNsNlCqazOph9JRd7qzdos5rxQplCZBnaSHaGGbmKw", "expires_in": 3599, "scope": "https://www.googleapis.com/auth/drive", "token_type": "Bearer"}, "scopes": ["https://www.googleapis.com/auth/drive"], "token_info_uri": "https://oauth2.googleapis.com/tokeninfo", "invalid": false, "_class": "OAuth2Credentials", "_module": "oauth2client.client"}
+{
+    "access_token": "",
+    "client_id": "",
+    "client_secret": "",
+    "refresh_token": "",
+    "token_expiry": "",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "user_agent": null,
+    "revoke_uri": "https://oauth2.googleapis.com/revoke",
+    "id_token": null,
+    "token_response": {
+        "access_token": "",
+        "expires_in": 3599,
+        "scope": "https://www.googleapis.com/auth/drive",
+        "token_type": "Bearer"
+    },
+    "scopes": [
+        "https://www.googleapis.com/auth/drive"
+    ],
+    "token_info_uri": "https://oauth2.googleapis.com/tokeninfo",
+    "invalid": false,
+    "_class": "OAuth2Credentials",
+    "_module": "oauth2client.client"
+}
